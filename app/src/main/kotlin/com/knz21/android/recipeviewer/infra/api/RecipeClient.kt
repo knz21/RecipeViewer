@@ -6,6 +6,4 @@ import javax.inject.Singleton
 @Singleton
 class RecipeClient @Inject constructor(private val service: RecipeService) {
     fun fetchRecipes() = service.fetchRecipes()
-
-    fun fetchContributors() = service.fetchContributors("DroidKaigi", "conference-app-2017", 100)
 }

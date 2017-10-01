@@ -8,12 +8,11 @@ import dagger.Subcomponent
 
 @Module
 class RecipeModule(private val contract: RecipePresenter.Contract) {
-
-  @Provides
-  fun provideContract() = contract
+    @Provides
+    fun provideContract() = contract
 }
 
 @Subcomponent(modules = arrayOf(RecipeModule::class))
 interface RecipeComponent {
-  fun inject(a: RecipeActivity)
+    fun inject(a: RecipeActivity)
 }

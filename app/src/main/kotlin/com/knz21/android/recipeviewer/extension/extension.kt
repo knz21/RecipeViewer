@@ -7,6 +7,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 fun <T> Observable<T>.applySchedulers(): Observable<T> = subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+
 fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
-  compositeDisposable.add(this)
+    compositeDisposable.add(this)
 }

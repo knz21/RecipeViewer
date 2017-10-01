@@ -11,5 +11,5 @@
     <tab
         android:id="@+id/navigation_nearby"
         android:icon="@drawable/ic_local_bar_black_24dp"
-        android:title="@string/navigation_bar" />
+        android:title="@string/navigation_bar"/>
 </tabs>

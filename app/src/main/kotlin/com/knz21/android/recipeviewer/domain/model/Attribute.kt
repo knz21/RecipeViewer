@@ -11,7 +11,7 @@ data class Attribute(
         @Setter("id")
         val id: String,
 
-        @Column
+        @Column(unique = true)
         @Setter("key")
         val key: String,
 

@@ -13,22 +13,21 @@ import com.knz21.android.recipeviewer.R
 import com.knz21.android.recipeviewer.databinding.ActivityRecipeBinding
 import com.knz21.android.recipeviewer.databinding.RecipeItemBinding
 import com.knz21.android.recipeviewer.di.RecipeModule
-import com.knz21.android.recipeviewer.domain.model.Contributor
+import com.knz21.android.recipeviewer.domain.struct.RecipesStruct
 import com.squareup.picasso.Picasso
 import timber.log.Timber
 import javax.inject.Inject
 
 class RecipeActivity : AppCompatActivity(), RecipePresenter.Contract {
-
     private val binding by lazy { DataBindingUtil.setContentView<ActivityRecipeBinding>(this, R.layout.activity_recipe) }
     @Inject lateinit var presenter: RecipePresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as RecipeApp).component.plus(RecipeModule(this)).inject(this)
-        binding.listView.layoutManager = GridLayoutManager(this, 3)
+        binding.listView.layoutManager = GridLayoutManager(this, 2)
         binding.listView.addItemDecoration(RecipeListDecoration())
-        presenter.getContributors()
+        presenter.getRecipes()
     }
 
     override fun onDestroy() {
@@ -36,29 +35,35 @@ class RecipeActivity : AppCompatActivity(), RecipePresenter.Contract {
         super.onDestroy()
     }
 
-    override fun showContributors(contributors: List<Contributor>) {
-        Timber.i("#showContributos")
-        binding.listView.adapter = RecipeListAdapter(this, contributors)
+    override fun showRecipes(recipes: RecipesStruct) {
+        Timber.i("#showRecipes")
+        binding.listView.adapter = RecipeListAdapter(this, recipes)
     }
 
-    private class RecipeListAdapter(private val context: Context, private val contributors: List<Contributor>) :
+    private class RecipeListAdapter(private val context: Context, private val recipes: RecipesStruct) :
             RecyclerView.Adapter<RecipeItemViewHolder>() {
         override fun onBindViewHolder(holder: RecipeItemViewHolder?, position: Int) {
-            holder?.binding?.recipeThumbnail.run { Picasso.with(context).load(contributors[position].avatarUrl).into(this) }
+            holder?.binding?.run {
+                recipeThumbnail.run { Picasso.with(context).load(recipes.getThumbUrl(position)).into(this) }
+                recipeTitle.run { text = recipes.getTitle(position) }
+            }
         }
 
         override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecipeItemViewHolder =
                 RecipeItemViewHolder(RecipeItemBinding.bind(View.inflate(context, R.layout.recipe_item, null)))
 
-        override fun getItemCount(): Int = contributors.size
-
+        override fun getItemCount(): Int = recipes.getSize()
     }
 
     private data class RecipeItemViewHolder(val binding: RecipeItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     private class RecipeListDecoration : RecyclerView.ItemDecoration() {
+        companion object {
+            private const val OFFSET = 10
+        }
+
         override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-            outRect?.set(10, 10, 10, 10)
+            outRect?.set(OFFSET, OFFSET, OFFSET, OFFSET)
         }
     }
 }

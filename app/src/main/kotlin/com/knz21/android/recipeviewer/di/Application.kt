@@ -21,49 +21,43 @@ import javax.inject.Singleton
 @Module
 class ApplicationModule(private val applicationContext: RecipeApp) {
 
-  private val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
+    private val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
 
-  @Provides
-  fun provideContext(): Context = applicationContext
+    @Provides
+    fun provideContext(): Context = applicationContext
 
-  @Provides
-  fun providesOkHttp(): OkHttpClient {
-    val logger = HttpLoggingInterceptor { log -> Timber.tag("OkHttp").v(log) }
-    logger.level = HttpLoggingInterceptor.Level.BASIC
+    @Provides
+    fun providesOkHttp(): OkHttpClient =
+            OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor { log -> Timber.tag("OkHttp").v(log) }
+                    .apply { level = HttpLoggingInterceptor.Level.BASIC })
+                    .build()
 
-    return OkHttpClient.Builder()
-        .addInterceptor(logger)
-        .build()
-  }
+    @Provides
+    fun provideRetrofit(oktHttpClient: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+                .client(oktHttpClient)
+                .baseUrl("https://s3-ap-northeast-1.amazonaws.com/data.kurashiru.com/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+    }
 
-  @Provides
-  fun provideRetrofit(oktHttpClient: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-        .client(oktHttpClient)
-        .baseUrl("https://api.github.com")
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build()
-  }
+    @Provides
+    fun provideRecipeService(retrofit: Retrofit): RecipeService = retrofit.create(RecipeService::class.java)
 
-  @Provides
-  fun provideRecipeService(retrofit: Retrofit): RecipeService = retrofit.create(RecipeService::class.java)
+    @Provides
+    fun provideOrma(context: Context): OrmaHolder =
+            OrmaHolder(OrmaDatabase.builder(context)
+                    .writeOnMainThread(AccessThreadConstraint.FATAL)
+                    .readOnMainThread(AccessThreadConstraint.FATAL)
+                    .trace(true)
+                    .build())
 
-  @Provides
-  fun provideOrma(context: Context): OrmaHolder {
-    val orma = OrmaDatabase.builder(context)
-        .writeOnMainThread(AccessThreadConstraint.FATAL)
-        .readOnMainThread(AccessThreadConstraint.FATAL)
-        .trace(true)
-        .build()
-    return OrmaHolder(orma)
-  }
-
-  class OrmaHolder(val orma: OrmaDatabase)
+    class OrmaHolder(val orma: OrmaDatabase)
 }
 
 @Singleton
 @Component(modules = arrayOf(ApplicationModule::class))
 interface ApplicationComponent {
-  fun plus(m: RecipeModule): RecipeComponent
+    fun plus(m: RecipeModule): RecipeComponent
 }
