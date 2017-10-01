@@ -3,4 +3,7 @@
     <string name="navigation_florist">florist</string>
     <string name="navigation_laundry">laundry</string>
     <string name="navigation_bar">bar</string>
+    <string name="snack_bar_message">%sをお気に入りに追加しました</string>
+    <string name="snack_bar_dismiss">cancel</string>
+    <string name="tag_progress">tag_progress</string>
 </resources>

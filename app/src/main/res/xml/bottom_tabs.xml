@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tabs xmlns:android="http://schemas.android.com/apk/res/android">
+<tabs>
     <tab
-        android:id="@+id/navigation_recents"
-        android:icon="@drawable/ic_local_florist_black_24dp"
-        android:title="@string/navigation_florist"/>
+        icon="@drawable/ic_local_florist_black_24dp"
+        id="@+id/navigation_all"
+        title="@string/navigation_florist"/>
     <tab
-        android:id="@+id/navigation_favorites"
-        android:icon="@drawable/ic_local_laundry_service_black_24dp"
-        android:title="@string/navigation_laundry"/>
+        icon="@drawable/ic_local_laundry_service_black_24dp"
+        id="@+id/navigation_favorites"
+        title="@string/navigation_laundry"/>
     <tab
-        android:id="@+id/navigation_nearby"
-        android:icon="@drawable/ic_local_bar_black_24dp"
-        android:title="@string/navigation_bar"/>
+        icon="@drawable/ic_local_bar_black_24dp"
+        id="@+id/navigation_nearby"
+        title="@string/navigation_bar"/>
 </tabs>
