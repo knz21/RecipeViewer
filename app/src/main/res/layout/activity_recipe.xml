@@ -26,16 +26,18 @@
             android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <com.roughike.bottombar.BottomBar
-            android:id="@+id/bottomBar"
+            android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_gravity="bottom"
-            app:bb_activeTabColor="@color/colorAccent"
+            app:bb_activeTabColor="@android:color/black"
             app:bb_behavior="shifting|shy"
-            app:bb_inActiveTabColor="@color/colorPrimary"
+            app:bb_inActiveTabColor="@android:color/darker_gray"
             app:bb_tabXmlResource="@xml/bottom_tabs"/>
     </android.support.design.widget.CoordinatorLayout>
 </layout>
